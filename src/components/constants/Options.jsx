@@ -3,19 +3,24 @@ export const SelectBudgetOptions = [
         id:1,
         icon: "💵",
         title:"Cheap",
-        desc: "Economize and Save"
+        desc: "Economize and Save",
+        price:"300-500$" 
     },
     {
         id: 2,
         icon: "💰",
         title:"Moderate",
-        desc: "Balance Cost and Comfort"
+        desc: "Balance Cost and Comfort",
+        price:"500-700$" 
+
     },
     {
         id:3,
         icon: "💎",
         title:"Luxury",
-        desc: "Induldge without Limits"
+        desc: "Induldge without Limits",
+        price:"1000$+" 
+
     },
 ]
 

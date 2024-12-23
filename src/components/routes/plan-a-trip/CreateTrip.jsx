@@ -135,7 +135,7 @@ function CreateTrip() {
         </h2>
         <p className="text-sm text-gray-600 font-medium mt-3">
           Help us craft your perfect adventure with just a few details.
-          JourneyJolt will generate a tailored itinerary based on your
+          Travel Genius will generate a tailored itinerary based on your
           preferences.
         </p>
       </div>
@@ -186,6 +186,8 @@ function CreateTrip() {
                     {item.icon} {item.title} :
                   </h3>
                   <p className="text-gray-500 font-medium">{item.desc}</p>
+                  <p>{item.price}</p>
+                  
                 </div>
               );
             })}

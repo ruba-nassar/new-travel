@@ -58,7 +58,11 @@ function Header() {
               Create Trip
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className=' text-lg'><Button onClick={LogOut}>Log Out <DropdownMenuShortcut>{" "}< LogOutIcon className="h-4" /></DropdownMenuShortcut></Button></DropdownMenuItem>
+          <DropdownMenuItem className=' text-lg'><Button  onClick={() =>
+        logout({
+          returnTo: window.location.origin + "/plan-a-trip",
+        })
+      }>Log Out <DropdownMenuShortcut>{" "}< LogOutIcon className="h-4" /></DropdownMenuShortcut></Button></DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       ) 

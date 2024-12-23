@@ -247,8 +247,8 @@ function CreateTrip() {
               <span className="flex gap-2">
                 <span>
                   {user
-                    ? "Logged In Securely to JourneyJolt with Google Authentication"
-                    : "Sign In to JourneyJolt with Google Authentication Securely"}
+                    ? "Logged In Securely to Travel Genius with Google Authentication"
+                    : "Sign In to Travel Genius with Google Authentication Securely"}
                 </span>
               </span>
               {user ? (

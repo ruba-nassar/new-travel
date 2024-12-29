@@ -42,13 +42,13 @@
 </div>
 </br>
 
-**JourneyJolt** is an AI-based travel planning application designed to make trip planning _easier and more efficient_. This project leverages artificial intelligence to analyze user preferences and provide personalized recommendations for destinations, accommodations, and activities.
+**Travel Genius** is an AI-based travel planning application designed to make trip planning _easier and more efficient_. This project leverages artificial intelligence to analyze user preferences and provide personalized recommendations for destinations, accommodations, and activities.
 
-Key features of JourneyJolt include:
+Key features of Travel Genius include:
 * **Personalized Recommendations**: The AI suggests ideal destinations, hotels, and activities tailored to the traveler’s preferences.
 * **Automated Itinerary Generation**: The app automatically creates a full itinerary that considers factors like travel time and user preferences.
 
-JourneyJolt aims to enhance the travel experience by providing a streamlined, easy-to-use platform for trip planning, designed for both casual travelers and frequent explorers alike.
+Travel Genius aims to enhance the travel experience by providing a streamlined, easy-to-use platform for trip planning, designed for both casual travelers and frequent explorers alike.
 
 
 
@@ -71,9 +71,9 @@ This project is built with the following major frameworks, libraries, and servic
 
 ## Getting Started
 
-Setting up JourneyJolt is simple — just configure your ```.env``` file, and you're ready to go!
+Setting up Travel Genius is simple — just configure your ```.env``` file, and you're ready to go!
 
-To get started with JourneyJolt, follow these instructions to set up the project locally on your machine for development and testing.
+To get started with Travel Genius, follow these instructions to set up the project locally on your machine for development and testing.
 
 ### Prerequisites
 
@@ -83,7 +83,7 @@ Before you begin, ensure you have the following installed:
 
 ### Services & API Keys Setup
 
-To fully integrate JourneyJolt with third-party services, you'll need to sign up for the following services, configure the required settings, and obtain API keys. Below are the steps for each service:
+To fully integrate Travel Genius with third-party services, you'll need to sign up for the following services, configure the required settings, and obtain API keys. Below are the steps for each service:
 
  
 <details>

@@ -1,11 +1,11 @@
-import { Input } from "@/components/ui/input"; // Importing custom Input component
-import React, { useContext, useEffect, useState } from "react"; // React core imports
-import GooglePlacesAutocomplete from "react-google-places-autocomplete"; // For handling Google Places autocomplete
+import { Input } from "@/components/ui/input";
+import React, { useContext, useEffect, useState } from "react";
+import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import {
-  PROMPT, // Importing constants for predefined prompt text
-  SelectBudgetOptions, // Options for budget selection
-  SelectNoOfPersons, // Options for the number of persons
-} from "../../constants/Options"; // Importing constants from Options
+  PROMPT,
+  SelectBudgetOptions,
+  SelectNoOfPersons,
+} from "../../constants/Options";
 import {
   Dialog,
   DialogContent,
@@ -14,48 +14,40 @@ import {
   DialogTitle,
   DialogClose,
   DialogFooter,
-} from "@/components/ui/dialog"; // Custom Dialog components
-import { FcGoogle } from "react-icons/fc"; // Google icon for Sign In
-import { AiOutlineLoading3Quarters } from "react-icons/ai"; // Loading spinner icon
-import { Button } from "@/components/ui/button"; // Custom Button component
-import toast from "react-hot-toast"; // To display toast notifications
-import { chatSession } from "@/Service/AiModel"; // AI service for generating trip data
+} from "@/components/ui/dialog";
+import { FcGoogle } from "react-icons/fc";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import { chatSession } from "@/Service/AiModel";
 
-import { LogInContext } from "@/Context/LogInContext/Login"; // Context to manage login state
+import { LogInContext } from "@/Context/LogInContext/Login";
 
-import { db } from "@/Service/Firebase"; // Firebase service to interact with Firestore
-import { doc, setDoc } from "firebase/firestore"; // Firebase Firestore functions
-import { useNavigate } from "react-router-dom"; // React Router for navigation
-import DatePicker from "react-datepicker"; // For handling date range selection
-import "react-datepicker/dist/react-datepicker.css"; // Importing styles for date picker
+import { db } from "@/Service/Firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function CreateTrip() {
-  // State variables
-  const [place, setPlace] = useState(""); // Store selected place
-  const [formData, setFormData] = useState([]); // Store user-selected form data
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Manage dialog visibility
-  const [isLoading, setIsLoading] = useState(false); // Handle loading state
-  const [startDate, setStartDate] = useState(null); // Store start date
-  const [endDate, setEndDate] = useState(null); // Store end date
-  const navigate = useNavigate(); // For navigation after trip creation
+  const [place, setPlace] = useState("");
+  const [formData, setFormData] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const { user, loginWithPopup, isAuthenticated } = useContext(LogInContext); // Use login context for user authentication
+  const { user, loginWithPopup, isAuthenticated } = useContext(LogInContext);
 
-  // Function to handle input changes
   const handleInputChange = (name, value) => {
     setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  // Function to trigger sign-in process
   const SignIn = async () => {
-    loginWithPopup(); // Initiates Google sign-in popup
+    loginWithPopup();
   };
 
-  // Save user data to Firestore
   const SaveUser = async () => {
-    const User = JSON.parse(localStorage.getItem("User")); // Retrieve user from localStorage
-    const id = User?.email; // User ID based on email
-    await setDoc(doc(db, "Users", id), { // Set user document in Firestore
+    const User = JSON.parse(localStorage.getItem("User"));
+    const id = User?.email;
+    await setDoc(doc(db, "Users", id), {
       userName: User?.name,
       userEmail: User?.email,
       userPicture: User?.picture,
@@ -63,38 +55,36 @@ function CreateTrip() {
     });
   };
 
-  // Effect hook to handle user login and saving data to Firestore
   useEffect(() => {
     if (user && isAuthenticated) {
-      localStorage.setItem("User", JSON.stringify(user)); // Store user data in localStorage
-      SaveUser(); // Save user data to Firestore
+      localStorage.setItem("User", JSON.stringify(user));
+      SaveUser();
     }
-  }, [user]); // Runs when user data is updated
+  }, [user]);
 
-  // Save trip data to Firestore
   const SaveTrip = async (TripData) => {
-    const User = JSON.parse(localStorage.getItem("User")); // Retrieve user data
-    const id = Date.now().toString(); // Generate unique trip ID based on timestamp
-    setIsLoading(true); // Set loading state
-    await setDoc(doc(db, "Trips", id), { // Save trip data to Firestore
+    const User = JSON.parse(localStorage.getItem("User"));
+    const id = Date.now().toString();
+    setIsLoading(true);
+    await setDoc(doc(db, "Trips", id), {
       tripId: id,
       userSelection: formData,
       tripData: TripData,
+
       userName: User?.name,
       userEmail: User?.email,
     });
-    setIsLoading(false); // Reset loading state
-    localStorage.setItem('Trip', JSON.stringify(TripData)); // Store trip data in localStorage
-    navigate('/my-trips/' + id); // Redirect to trip details page
+    setIsLoading(false);
+    localStorage.setItem('Trip', JSON.stringify(TripData));
+    navigate('/my-trips/'+id);
   };
 
-  // Function to generate trip based on user input
   const generateTrip = async () => {
     if (!isAuthenticated) {
-      toast("Sign In to continue", { // Toast message if not authenticated
+      toast("Sign In to continue", {
         icon: "⚠️",
       });
-      return setIsDialogOpen(true); // Open dialog for sign-in
+      return setIsDialogOpen(true);
     }
     if (
       !formData?.noOfDays ||
@@ -102,56 +92,43 @@ function CreateTrip() {
       !formData?.People ||
       !formData?.Budget
     ) {
-      return toast.error("Please fill out every field or select every option."); // Error if any field is missing
+      return toast.error("Please fill out every field or select every option.");
     }
-    if (formData?.noOfDays > 10) {
-      return toast.error("Please enter Trip Days less than 10"); // Error if days are more than 10
+    if (formData?.noOfDays > 5) {
+      return toast.error("Please enter Trip Days less then 5");
     }
     if (formData?.noOfDays < 1) {
-      return toast.error("Invalid number of Days"); // Error for invalid number of days
+      return toast.error("Invalid number of Days");
     }
-
-    // Format the final prompt for the AI model
     const FINAL_PROMPT = PROMPT.replace(/{location}/g, formData?.location)
       .replace(/{noOfDays}/g, formData?.noOfDays)
       .replace(/{People}/g, formData?.People)
       .replace(/{Budget}/g, formData?.Budget);
 
+
     try {
-      const toastId = toast.loading("Generating Trip", { // Show loading toast
+      const toastId = toast.loading("Generating Trip", {
         icon: "✈️",
       });
 
-      setIsLoading(true); // Set loading state
-      const result = await chatSession.sendMessage(FINAL_PROMPT); // Send prompt to AI model
-      const trip = JSON.parse(result.response.text()); // Parse the response as trip data
-      setIsLoading(false); // Reset loading state
-      SaveTrip(trip); // Save the generated trip
+      setIsLoading(true);
+      const result = await chatSession.sendMessage(FINAL_PROMPT);
+      const trip = JSON.parse(result.response.text());
+      setIsLoading(false);
+      SaveTrip(trip);
 
-      toast.dismiss(toastId); // Dismiss loading toast
-      toast.success("Trip Generated Successfully"); // Success toast
+      toast.dismiss(toastId);
+      toast.success("Trip Generated Successfully");
     } catch (error) {
-      setIsLoading(false); // Reset loading state on error
-      toast.dismiss(); // Dismiss toast
-      toast.error("Failed to generate trip. Please try again."); // Error toast
-      console.error(error); // Log the error
-    }
-  };
-
-  // Handle date range selection
-  const handleDateChange = (start, end) => {
-    setStartDate(start);
-    setEndDate(end);
-
-    if (start && end) {
-      const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); // Calculate duration in days
-      handleInputChange("noOfDays", duration); // Update days in form data
+      setIsLoading(false);
+      toast.dismiss();
+      toast.error("Failed to generate trip. Please try again.");
+      console.error(error);
     }
   };
 
   return (
     <div className="mt-10">
-      {/* Header and description */}
       <div className="text text-center md:text-left">
         <h2 className="text-2xl md:text-4xl font-bold">
           Share Your Travel Preferences 🌟🚀
@@ -163,10 +140,8 @@ function CreateTrip() {
         </p>
       </div>
 
-      {/* Form to gather trip preferences */}
       <div className="form mt-10 flex flex-col gap-10 md:gap-20 ">
-        {/* Location selection */}
-        <div className="place border p-4 rounded-lg">
+        <div className="place">
           <h2 className="font-semibold text-md md:text-lg mb-3 text-center md:text-left">
             Where do you want to Explore? 🏖️
           </h2>
@@ -175,30 +150,25 @@ function CreateTrip() {
             selectProps={{
               value: place,
               onChange: (place) => {
-                setPlace(place); // Set the selected place
-                handleInputChange("location", place.label); // Update form data
+                setPlace(place);
+                handleInputChange("location", place.label);
               },
             }}
           />
         </div>
 
-        {/* Date range selection */}
-        <div className="day border p-4 rounded-lg">
+        <div className="day">
           <h2 className="font-semibold text-md md:text-lg mb-3 text-center md:text-left">
             How long is your Trip? 🕜
           </h2>
-          <DatePicker
-            selected={startDate}
-            onChange={(dates) => handleDateChange(dates[0], dates[1])} // Handle date change
-            startDate={startDate}
-            endDate={endDate}
-            selectsRange
-            placeholderText="Select trip duration"
+          <Input
+            placeholder="Ex: 2"
+            type="number"
+            onChange={(day) => handleInputChange("noOfDays", day.target.value)}
           />
         </div>
 
-        {/* Budget selection */}
-        <div className="budget border p-4 rounded-lg">
+        <div className="budget">
           <h2 className="font-semibold text-md md:text-lg mb-3 text-center md:text-left">
             What is your Budget? 💳
           </h2>
@@ -206,7 +176,7 @@ function CreateTrip() {
             {SelectBudgetOptions.map((item) => {
               return (
                 <div
-                  onClick={(e) => handleInputChange("Budget", item.title)} // Handle budget selection
+                  onClick={(e) => handleInputChange("Budget", item.title)}
                   key={item.id}
                   className={`option transition-all hover:scale-110 p-4 h-32 flex items-center justify-center flex-col border rounded-lg hover:shadow-lg
                   ${formData?.Budget == item.title && "border-black shadow-xl"}
@@ -217,14 +187,14 @@ function CreateTrip() {
                   </h3>
                   <p className="text-gray-500 font-medium">{item.desc}</p>
                   <p>{item.price}</p>
+                  
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* People selection */}
-        <div className="people border p-4 rounded-lg">
+        <div className="people">
           <h2 className="font-semibold text-md md:text-lg mb-3 text-center md:text-left">
             Who are you traveling with? 🚗
           </h2>
@@ -232,7 +202,7 @@ function CreateTrip() {
             {SelectNoOfPersons.map((item) => {
               return (
                 <div
-                  onClick={(e) => handleInputChange("People", item.no)} // Handle number of people selection
+                  onClick={(e) => handleInputChange("People", item.no)}
                   key={item.id}
                   className={`option transition-all hover:scale-110 p-4 h-32 flex items-center justify-center flex-col border rounded-lg hover:shadow-lg
                     ${
@@ -253,22 +223,20 @@ function CreateTrip() {
         </div>
       </div>
 
-      {/* Submit button */}
       <div className="create-trip-btn w-full flex items-center justify-center h-32">
         <Button disabled={isLoading} onClick={generateTrip}>
           {isLoading ? (
-            <AiOutlineLoading3Quarters className="h-6 w-6 animate-spin" /> // Show loading spinner while generating trip
+            <AiOutlineLoading3Quarters className="h-6 w-6 animate-spin" />
           ) : (
             "Plan A Trip"
           )}
         </Button>
       </div>
 
-      {/* Dialog for sign-in */}
       <Dialog
         className="m-4"
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen} // Control dialog open state
+        onOpenChange={setIsDialogOpen}
       >
         <DialogContent>
           <DialogHeader>
@@ -287,17 +255,17 @@ function CreateTrip() {
                 ""
               ) : (
                 <Button
-                  onClick={SignIn} // Trigger sign-in process
+                  onClick={SignIn}
                   className="w-full mt-5 flex gap-2 items-center justify-center"
                 >
-                  Sign In with <FcGoogle className="h-5 w-5" /> // Google Sign-In Button
+                  Sign In with <FcGoogle className="h-5 w-5" />
                 </Button>
               )}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" className="w-full">
-              <DialogClose>Close</DialogClose> {/* Close dialog */}
+              <DialogClose>Close</DialogClose>
             </Button>
           </DialogFooter>
         </DialogContent>

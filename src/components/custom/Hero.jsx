@@ -82,7 +82,7 @@ function Hero() {
        
         <div className="button flex flex-col">
           <Link to="/plan-a-trip">
-            <Button className="w-60 h-16 font-bold text-2xl font-sans bg-white/70  rounded-lg p-6 shadow-lg text-gray-700">
+            <Button className="w-60 h-16 font-bold text-lg font-sans bg-white/70  rounded-lg p-6 shadow-lg text-gray-700">
               {isAuthenticated
                 ? "Let's Make Another Trip"
                 : "Plan a Trip, It's Free"}

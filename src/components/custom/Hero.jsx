@@ -49,15 +49,25 @@ function Hero() {
   //   );
   // }
   return (
-    <div className="flex items-center flex-col text-center justify-center h-auto">
-      <div className="text px-10 md:px-40 flex flex-col items-center justify-center gap-4">
+    <div className="flex items-center flex-col text-center justify-center h-screen bg-[url('/travel.png')]">
+      <div className="text px-10 md:px-40 flex flex-col   gap-4">
         <div className="heading">
-          <h1 className="font-extrabold text-3xl md:text-[50px] leading-tight text-orange-500">
+          <div className="bg-white/70  rounded-lg p-6 shadow-lg">
+          <h1 className="font-extrabold text-3xl md:text-[60px] leading-tight text-orange-500 text-nowrap">
             Embark on Electrifying Adventures with Travel Genius
           </h1>
           <h3 className="font-extrabold opacity-70 text-xl md:text-[40px] leading-tight">
             Tailored Itineraries for Every Explorer
           </h3>
+          <div className="desc mt-5">
+          <h5 className="text-[15px] md:text-2xl font-semibold opacity-40">
+            Your trusted trip planner and adventure guide sparking thrilling
+            journeys with personalized travel plans designed to match your
+            passions and preferences.
+          </h5>
+        </div>
+          </div>
+         
           {/*<br />
           <div className="stats">
             <h3 className="scroll-m-20 text-xl font-bold tracking-tight">
@@ -69,16 +79,10 @@ function Hero() {
             </div>
           </div>*/}
         </div>
-        <div className="desc mt-5">
-          <h5 className="text-[15px] md:text-2xl font-semibold opacity-40">
-            Your trusted trip planner and adventure guide sparking thrilling
-            journeys with personalized travel plans designed to match your
-            passions and preferences.
-          </h5>
-        </div>
+       
         <div className="button flex flex-col">
           <Link to="/plan-a-trip">
-            <Button className="">
+            <Button className="w-60 h-16 font-bold text-2xl font-sans bg-white/70  rounded-lg p-6 shadow-lg text-gray-700">
               {isAuthenticated
                 ? "Let's Make Another Trip"
                 : "Plan a Trip, It's Free"}
@@ -88,9 +92,8 @@ function Hero() {
          
         </div>
       </div>
-      <div className="img">
-        <img src="/travel.png" className="" alt="" />
-      </div>
+     
+     
     </div>
   );
 }
